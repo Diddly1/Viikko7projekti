@@ -1,0 +1,60 @@
+Koodari: 1 aikablöb
+aloittanut: 2022-10-10 09:00:00
+lopettanut: 2022-10-10 16:00:00
+Tunteja: 7:00:00
+
+Projektissa: vko07
+Selvitys: sää
+Ulkoilma koodauksen aikana: -2.01
+
+=================================
+
+Koodari: 2 Ville
+aloittanut: 2022-10-10 09:00:00
+lopettanut: 2022-10-10 16:00:00
+Tunteja: 7:00:00
+
+Projektissa: vk7
+Selvitys: asioita
+Ulkoilma koodauksen aikana: 0.30
+
+=================================
+
+Koodari: 3 Anna
+aloittanut: 2022-10-10 09:00:00
+lopettanut: 2022-10-10 16:00:00
+Tunteja: 7:00:00
+
+Projektissa: vk7
+Selvitys: asioita ja esineitä
+Ulkoilma koodauksen aikana: 0.30
+
+=================================
+
+Koodari: 4 Mike
+aloittanut: 2022-10-10 09:00:00
+lopettanut: 2022-10-10 16:00:00
+Tunteja: 7:00:00
+
+Projektissa: vk7
+Selvitys: kahvia ja teetä
+Ulkoilma koodauksen aikana: 0.30
+
+=================================
+
+Koodari: 5 Pietari
+aloittanut: 2022-10-10 09:00:00
+lopettanut: 2022-10-10 16:00:00
+Tunteja: 7:00:00
+
+Projektissa: vk7
+Selvitys: pullaa ja muuta
+Ulkoilma koodauksen aikana: 0.30
+
+=================================
+
+Kokonaistunnit: 1 day, 11:00:00
+
+Työaikoja puuttuu:
+
+aikablöb

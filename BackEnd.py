@@ -6,27 +6,25 @@ import time
 
 def puuttuuko_tyoaikoja(lista: list):
 
-    projektiinLiitetyt = ['Matti', 'Ville', 'Anna', 'Mike', 'Pietari', 'Heini']
+    projektiinLiitetyt = ['Ville', 'Anna', 'Mike', 'Pietari']
     projektiinLiitetyt.sort(key = len)
     lista.sort(key = len)
 
     kirjaus_puuttuu = []
 
-    i = 0
-    for arvo in projektiinLiitetyt:
-        if arvo not in lista:
-            kirjaus_puuttuu.append(arvo)
-    
+    for arvo in lista:
+        if arvo[1] not in projektiinLiitetyt:
+            kirjaus_puuttuu.append(arvo[1])
+
     return kirjaus_puuttuu
 
-def append_db(nimi,alku,loppu,projekti_nimi,selite,cursor):
-    SQL = "INSERT INTO tyo_taulu (nimi,alku,loppu,projekti_nimi,selite) VALUES (%s,%s,%s,%s,%s,%s);"
-    data = (nimi,alku,loppu,projekti_nimi,selite)
-    cursor.execute(SQL,data)
-
 def haeSarakkeet(cursor, con):  
-    aloitus = time.strftime("%Y-%m-%d 00:00:00")
-    lopetus = time.strftime("%Y-%m-%d 23:59:59")
+    
+    #aloitus = time.strftime("%Y-%m-%d 00:00:00")
+    #lopetus = time.strftime("%Y-%m-%d 23:59:59")
+
+    aloitus = '2022/10/10 00:00:00'
+    lopetus = '2022/10/10 23:59:59'
 
     SQL = "select * from tyo_taulu where alku between %s and %s"
     data = (aloitus, lopetus)
@@ -45,23 +43,30 @@ def haeSarakkeet(cursor, con):
         mysum += d
 
     puuttuuko_tyoaikoja(row)
-    kirjoitaRaportti(mysum, row)
+    kirjoitaRaportti(mysum, row, puuttuuko_tyoaikoja(row))
 
-def kirjoitaRaportti(summa: datetime.timedelta(), rivit: list):
+def kirjoitaRaportti(summa: datetime.timedelta(), rivit: list, puuttuvat: list):
+
+   
 
     with open("tyoaikaraportti.txt", "w") as tiedosto:
         for i in rivit:
-            rivi = f'{str(i[0])} {str(i[1])}\naloittanut: {str(i[2])}\nlopettanut: {str(i[3])}\nTunteja: {i[3]-i[2]}\nProjektissa: {str(i[4])}\nSelvitys: {str(i[5])}\n\n'
+            rivi = f'Koodari: {str(i[0])} {str(i[1])}\naloittanut: {str(i[2])}\nlopettanut: {str(i[3])}\nTunteja: {i[3]-i[2]}\n\nProjektissa: {str(i[4])}\nSelvitys: {str(i[5])}\nUlkoilma koodauksen aikana: {str(i[6])}\n\n=================================\n\n'
             tiedosto.write(rivi)
         tiedosto.write(f'Kokonaistunnit: {str(summa)}')
-    
+
+        if len(puuttuvat) != 0:
+            tiedosto.write(f'\n\nTyöaikoja puuttuu:\n\n')
+            for i in puuttuvat:
+                tiedosto.write(f'{i}\n')    
+
     laheta_sahkoposti()
 
 def laheta_sahkoposti():
     
     with open("./ignore.txt", 'r') as file:
         lines = [line.rstrip() for line in file]
-    pw = lines[2]
+    pw = lines[1]
     
     with open("tyoaikaraportti.txt") as fp:
         msg = EmailMessage()

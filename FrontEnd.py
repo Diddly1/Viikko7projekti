@@ -93,7 +93,7 @@ def kayttoliittyma():
         # print(saa)
         
         tietokantayhteys(nimi,alku,loppu,projekti_nimi,selite,saa)
-        break
+        
 
 if __name__ == "__main__":
     kayttoliittyma()
