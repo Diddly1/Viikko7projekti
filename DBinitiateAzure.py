@@ -46,7 +46,7 @@ def create_table(DBname,tablename):
         loppu           TIMESTAMP NOT NULL, \
         projekti_nimi   varchar(255) NOT NULL, \
         selite          varchar NOT NULL,\
-        saa             DECIMAL(5,2)\
+        lampotila       DECIMAL(5,2)\
         );".format(tablename)
     print('Running CREATE TABLE')
     return SQLtable_init,DBname

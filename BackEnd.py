@@ -1,3 +1,4 @@
+from webbrowser import Konqueror
 import psycopg2
 import datetime
 import smtplib
@@ -7,24 +8,23 @@ import time
 def puuttuuko_tyoaikoja(lista: list):
 
     projektiinLiitetyt = ['Ville', 'Anna', 'Mike', 'Pietari']
-    projektiinLiitetyt.sort(key = len)
-    lista.sort(key = len)
-
+    nimet = []
     kirjaus_puuttuu = []
-
+    
     for arvo in lista:
-        if arvo[1] not in projektiinLiitetyt:
-            kirjaus_puuttuu.append(arvo[1])
+        nimet.append(arvo[1])
+
+    for arvo in projektiinLiitetyt:
+        if arvo not in nimet:
+            kirjaus_puuttuu.append(arvo)
 
     return kirjaus_puuttuu
 
-def haeSarakkeet(cursor, con):  
+def haeSarakkeet(cursor, con):
+    print("Haetaan työaikoja...")
     
-    #aloitus = time.strftime("%Y-%m-%d 00:00:00")
-    #lopetus = time.strftime("%Y-%m-%d 23:59:59")
-
-    aloitus = '2022/10/10 00:00:00'
-    lopetus = '2022/10/10 23:59:59'
+    aloitus = time.strftime("%Y-%m-%d 00:00:00")
+    lopetus = time.strftime("%Y-%m-%d 23:59:59")
 
     SQL = "select * from tyo_taulu where alku between %s and %s"
     data = (aloitus, lopetus)
@@ -45,9 +45,9 @@ def haeSarakkeet(cursor, con):
     puuttuuko_tyoaikoja(row)
     kirjoitaRaportti(mysum, row, puuttuuko_tyoaikoja(row))
 
-def kirjoitaRaportti(summa: datetime.timedelta(), rivit: list, puuttuvat: list):
 
-   
+def kirjoitaRaportti(summa: datetime.timedelta(), rivit: list, puuttuvat: list):
+    print("Kirjoitetaan raportti...")
 
     with open("tyoaikaraportti.txt", "w") as tiedosto:
         for i in rivit:
@@ -55,7 +55,7 @@ def kirjoitaRaportti(summa: datetime.timedelta(), rivit: list, puuttuvat: list):
             tiedosto.write(rivi)
         tiedosto.write(f'Kokonaistunnit: {str(summa)}')
 
-        if len(puuttuvat) != 0:
+        if len(puuttuvat) != 4:
             tiedosto.write(f'\n\nTyöaikoja puuttuu:\n\n')
             for i in puuttuvat:
                 tiedosto.write(f'{i}\n')    
@@ -63,7 +63,7 @@ def kirjoitaRaportti(summa: datetime.timedelta(), rivit: list, puuttuvat: list):
     laheta_sahkoposti()
 
 def laheta_sahkoposti():
-    
+    print("Lähetetään sähköposti...")
     with open("./ignore.txt", 'r') as file:
         lines = [line.rstrip() for line in file]
     pw = lines[1]
@@ -81,16 +81,16 @@ def laheta_sahkoposti():
     server.login("waffeloine@gmail.com", pw)
     server.sendmail("linna.anna@gmail.com", "ville.jouhten@saunalahti.fi", msg.as_string())
 
-    server.quit()
+    server.quit() 
 
 def db_connection():
-    with open("./ignore.txt", 'r') as file:
-        lines = [line.rstrip() for line in file]
-    pw = lines[0]
-
     con = None
     try:
-        con = psycopg2.connect("dbname=tyotunnit user=postgres password = {}".format(pw))
+        sslmode = "require"
+        conn_string = "host={0} user={1} dbname={2} password={3} sslmode={4}".format(host, user, dbname, password, sslmode)
+
+        con = psycopg2.connect(conn_string) 
+        print("Connection established")
         cursor = con.cursor()
         con.commit()
         haeSarakkeet(cursor, con)
@@ -104,6 +104,13 @@ def db_connection():
             con.close()
 
 
-
 if __name__ == "__main__":
-    db_connection()           
+    
+    with open("DBfiles/DBignore.txt", 'r') as file:
+        lines = [line.rstrip() for line in file]
+    password = lines[0]
+    host = lines[1]
+    user = lines[2]
+    dbname = "tyotunnit_db"
+
+    db_connection()
