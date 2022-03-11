@@ -130,8 +130,8 @@ resource "azurerm_virtual_machine" "vm" {
 
   os_profile {
     computer_name  = var.vm_desktop_name
-    admin_username = var.tunnusvm
-    admin_password = var.salasanavm
+    admin_username = var.tunnus
+    admin_password = var.salasana
   }
 
   os_profile_windows_config {
